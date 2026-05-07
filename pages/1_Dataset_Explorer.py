@@ -1,10 +1,6 @@
 import streamlit as st
 import pandas as pd
 import os
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
 
 # =========================
 # STREAMLIT CONFIG
@@ -34,9 +30,10 @@ st.markdown("""
 # =========================
 @st.cache_data
 def load_dataset():
-    """Load the real-time dataset from .env path"""
+    """Load the real-time dataset from Streamlit secrets"""
     try:
-        dataset_path = os.getenv('REAL_TIME_DATASET', 'dataset/Electric rice cooker_temperature rise test.csv')
+        # Get dataset path from Streamlit secrets
+        dataset_path = st.secrets.get("paths", {}).get("REAL_TIME_DATASET", "dataset/real_time_rice_ccoker_dataset.csv")
         
         # Check if file exists
         if not os.path.exists(dataset_path):
@@ -62,8 +59,17 @@ df, error = load_dataset()
 # =========================
 if error:
     st.error(f"❌ {error}")
-    st.info("Please ensure the dataset file exists at the path specified in .env file")
-    st.code(f"REAL_TIME_DATASET={os.getenv('REAL_TIME_DATASET', 'dataset/Electric rice cooker_temperature rise test.csv')}")
+    st.info("Please ensure the dataset file exists at the path specified in .streamlit/secrets.toml")
+    
+    # Show expected path from secrets
+    try:
+        expected_path = st.secrets.get("paths", {}).get("REAL_TIME_DATASET", "Not configured")
+        st.code(f"[paths]\nREAL_TIME_DATASET = \"{expected_path}\"")
+    except:
+        st.warning("⚠️ Secrets file not found. Please create `.streamlit/secrets.toml` from the template.")
+        st.code("""[paths]
+REAL_TIME_DATASET = "dataset\\\\real_time_rice_ccoker_dataset.csv"
+""")
 else:
     # Dataset information
     st.markdown("### 📈 Dataset Information")
