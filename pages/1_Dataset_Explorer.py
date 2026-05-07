@@ -33,7 +33,7 @@ def load_dataset():
     """Load the real-time dataset from Streamlit secrets"""
     try:
         # Get dataset path from Streamlit secrets
-        dataset_path = st.secrets.get("paths", {}).get("REAL_TIME_DATASET", "dataset/real_time_rice_ccoker_dataset.csv")
+        dataset_path = st.secrets.get("paths", {}).get("REAL_TIME_DATASET")
         
         # Check if file exists
         if not os.path.exists(dataset_path):
