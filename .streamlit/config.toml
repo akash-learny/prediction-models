@@ -1,0 +1,9 @@
+[server]
+headless = true
+port = 8501
+maxUploadSize = 200
+enableStaticServing = false
+fileWatcherType = "none"
+
+[theme]
+base = "dark" # "light"
